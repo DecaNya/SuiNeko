@@ -34,7 +34,7 @@ export const es = {
   'collapse': 'Contraer',
   'expand': 'Expandir',
   'back': 'Atrás',
-  'brand.localBuild': 'Sui Harness',
+  'brand.localBuild': 'SuiNeko',
   'workspace.defaultName': 'Espacio de trabajo predeterminado',
   'unknown': 'Desconocido',
   'none': 'Ninguno',
