@@ -120,7 +120,7 @@ export function Welcome({ api }: { api: WelcomeApi }) {
     setLoginBusy(true)
     setError('')
     try {
-      const result = await api.loginSuiApi()
+      const result = await api.loginSuiApi?.() ?? { ok: false }
       if (mounted.current && !result.ok) setError(m.welcomeAuthFailed)
     } catch {
       if (mounted.current) setError(m.welcomeAuthFailed)
