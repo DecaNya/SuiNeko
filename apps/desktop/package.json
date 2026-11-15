@@ -1,11 +1,11 @@
 {
   "name": "@deepseek-ai/dsh-desktop",
-  "description": "Sui Api desktop client",
+  "description": "Sui Harness desktop client",
   "version": "0.2.2-rc.3",
   "private": true,
   "license": "MIT",
   "author": {
-    "name": "Sui Api"
+    "name": "Sui Harness"
   },
   "type": "module",
   "main": "lib/main.js",
