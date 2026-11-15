@@ -2,6 +2,9 @@ name: Build Sui Api Windows
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - sui-api
 
 jobs:
   build:
