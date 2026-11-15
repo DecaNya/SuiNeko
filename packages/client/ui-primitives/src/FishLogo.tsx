@@ -1,4 +1,5 @@
 import type { IconProps } from './icons/props.ts'
+import { SUINEKO_LOGO_DATA_URI } from './suineko-logo-data.ts'
 
 /** Native viewBox of {@link FISH_LOGO_PATH} (width and height in user units). */
 export const FISH_LOGO_VIEWBOX = { width: 23.16, height: 17.04 }
@@ -14,15 +15,8 @@ export const FISH_LOGO_PATH = 'M22.9168 1.43018C22.6713 1.31018 22.5658 1.53918 
  */
 export function FishLogo({ size = 24, className }: IconProps) {
   return (
-    <svg
-      width={size}
-      height={(size * FISH_LOGO_VIEWBOX.height) / FISH_LOGO_VIEWBOX.width}
-      className={className}
-      viewBox={`0 0 ${FISH_LOGO_VIEWBOX.width} ${FISH_LOGO_VIEWBOX.height}`}
-      fill="none"
-      aria-hidden="true"
-    >
-      <path d={FISH_LOGO_PATH} fill="currentColor" />
+    <svg width={size} height={size} className={className} viewBox="0 0 100 100" fill="none" aria-hidden="true">
+      <image href={SUINEKO_LOGO_DATA_URI} width="100" height="100" preserveAspectRatio="xMidYMid slice" />
     </svg>
   )
 }
