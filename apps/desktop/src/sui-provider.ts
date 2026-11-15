@@ -100,7 +100,7 @@ const DISABLE_OFFICIAL = `- id: llm-deepseek
 `
 
 function hasEntry(source: string, id: string): boolean {
-  return new RegExp(`^-\\s*id:\\s*${id.replaceAll('-', '\\-')}\\s*$`, 'mu').test(source)
+  return source.split(/\r?\n/u).some(line => line.trim() === `- id: ${id}`)
 }
 
 /**
