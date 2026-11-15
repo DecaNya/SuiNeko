@@ -34,7 +34,7 @@ export const de = {
   'collapse': 'Einklappen',
   'expand': 'Ausklappen',
   'back': 'Zurück',
-  'brand.localBuild': 'Lokaler DSH-Build',
+  'brand.localBuild': 'Sui Harness',
   'workspace.defaultName': 'Standardarbeitsbereich',
   'unknown': 'Unbekannt',
   'none': 'Keine',
