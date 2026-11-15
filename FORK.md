@@ -3,7 +3,7 @@
 基于 DeepSeek Harness 0.2.2-rc.3 的 Sui Harness 桌面客户端分支。
 
 - 上游：https://github.com/deepseek-ai/deepseek-harness
-- Fork：https://github.com/Full-Sui/deepseek-harness
+- Fork：https://github.com/DecaNya/deepseek-harness
 - License：MIT
 - 首版目标：Windows x64，unsigned
 
