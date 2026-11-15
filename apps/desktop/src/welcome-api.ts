@@ -7,6 +7,7 @@ import type { DesktopLocale } from './locale.ts'
 /** Private native welcome channels, installed only while its window exists. */
 export const WELCOME_IPC = {
   saveApiKey: 'dsh-welcome:save-api-key',
+  loginSuiApi: 'dsh-welcome:login-sui-api',
   analytics: 'dsh-welcome:analytics',
   analyticsEnabled: 'dsh-welcome:analytics-enabled',
   skip: 'dsh-welcome:skip',
@@ -46,6 +47,8 @@ export interface WelcomeOperations {
    * @returns whether the write completed, without private error details.
    */
   saveApiKey(value: string): Promise<WelcomeSaveResult>
+  /** @returns whether a Sui Api account login completed and its device key was saved. */
+  loginSuiApi(): Promise<WelcomeSaveResult>
   /**
    * Enter the workspace without writing an onboarding-completion setting.
    * @returns completion after the workspace opens.
