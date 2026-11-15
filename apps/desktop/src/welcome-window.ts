@@ -66,7 +66,7 @@ export async function openWelcomeWindow(locale: DesktopLocale, operations: Welco
     active = false
     for (const channel of [
       WELCOME_IPC.analyticsEnabled, WELCOME_IPC.analytics, WELCOME_IPC.takeNotice, WELCOME_IPC.saveApiKey,
-      WELCOME_IPC.skip, WELCOME_IPC.start, WELCOME_IPC.cancel, WELCOME_IPC.copyLink,
+      WELCOME_IPC.skip, WELCOME_IPC.start, WELCOME_IPC.cancel, WELCOME_IPC.copyLink, WELCOME_IPC.loginSuiApi,
     ]) {
       ipcMain.removeHandler(channel)
     }
@@ -97,6 +97,10 @@ export async function openWelcomeWindow(locale: DesktopLocale, operations: Welco
     assertSender(event)
     if (typeof value !== 'string' || !/^[\x21-\x7e]+$/.test(value)) return { ok: false }
     return operations.saveApiKey(value)
+  })
+  ipcMain.handle(WELCOME_IPC.loginSuiApi, async (event) => {
+    assertSender(event)
+    return operations.loginSuiApi()
   })
   ipcMain.handle(WELCOME_IPC.skip, async (event) => {
     assertSender(event)
