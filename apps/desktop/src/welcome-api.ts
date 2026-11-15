@@ -48,7 +48,7 @@ export interface WelcomeOperations {
    */
   saveApiKey(value: string): Promise<WelcomeSaveResult>
   /** @returns whether a Sui Api account login completed and its device key was saved. */
-  loginSuiApi(): Promise<WelcomeSaveResult>
+  loginSuiApi?(): Promise<WelcomeSaveResult>
   /**
    * Enter the workspace without writing an onboarding-completion setting.
    * @returns completion after the workspace opens.
