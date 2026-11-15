@@ -34,7 +34,7 @@ export const pt = {
   'collapse': 'Recolher',
   'expand': 'Expandir',
   'back': 'Voltar',
-  'brand.localBuild': 'Sui Harness',
+  'brand.localBuild': 'SuiNeko',
   'workspace.defaultName': 'Espaço de trabalho padrão',
   'unknown': 'Desconhecido',
   'none': 'Nenhum',
