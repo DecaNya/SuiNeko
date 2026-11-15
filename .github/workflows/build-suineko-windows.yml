@@ -1,0 +1,41 @@
+name: Build SuiNeko Windows
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - sui-api
+
+jobs:
+  build:
+    runs-on: windows-latest
+    env:
+      DSH_DESKTOP_APP_ID: cc.odn.suineko
+      DSH_DESKTOP_UNSIGNED: '1'
+      DSH_DESKTOP_WINDOWS_COMPRESSION_LEVEL: '6'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Write Windows package settings
+        shell: pwsh
+        run: |
+          @"
+          DSH_DESKTOP_APP_ID=cc.odn.suineko
+          DSH_DESKTOP_AUTO_UPDATE_ENV=production
+          DSH_DESKTOP_MANDATORY_UPDATE_PROD_ORIGIN=https://suiapi.odn.cc
+          DSH_DESKTOP_MANDATORY_UPDATE_CONFIG={}
+          DSH_DESKTOP_NPM_REGISTRY=https://registry.npmmirror.com
+          DSH_DESKTOP_WINDOWS_COMPRESSION_LEVEL=6
+          "@ | Set-Content apps/desktop/.env.windows -Encoding utf8
+      - run: pnpm run package:desktop:win:x64:unsigned
+      - uses: actions/upload-artifact@v4
+        with:
+          name: suineko-windows-unsigned
+          path: |
+            apps/desktop/.desktop-build/targets/win-x64/unsigned-artifacts/*.exe
+            apps/desktop/.desktop-build/targets/win-x64/unsigned-artifacts/*.blockmap
+          if-no-files-found: error
