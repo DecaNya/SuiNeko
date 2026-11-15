@@ -1,0 +1,25 @@
+name: Build Sui Api Windows
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    env:
+      DSH_DESKTOP_APP_ID: cc.odn.suiapi.desktop
+      DSH_DESKTOP_UNSIGNED: '1'
+      DSH_DESKTOP_WINDOWS_COMPRESSION_LEVEL: '6'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run package:desktop:win:x64:unsigned
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sui-api-windows-unsigned
+          path: apps/desktop/.desktop-build/targets/win-x64/unsigned-artifacts/**
+          if-no-files-found: error
