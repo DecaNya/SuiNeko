@@ -39,3 +39,4 @@ jobs:
             apps/desktop/.desktop-build/targets/win-x64/unsigned-artifacts/*.exe
             apps/desktop/.desktop-build/targets/win-x64/unsigned-artifacts/*.blockmap
           if-no-files-found: error
+# triggered by Sui Harness rename
