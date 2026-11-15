@@ -93,7 +93,7 @@ export interface HeroShellProps {
  * @returns the fish svg element.
  */
 function HeroFish({ hovering: _hovering }: { hovering: boolean }) {
-  return <img className={css.fish} src={SUINEKO_LOGO_DATA_URI} width={34} height={34} alt="" aria-hidden="true" style={{ objectFit: 'cover', borderRadius: '50%' }} />
+  return <img className={css.fish} src={SUINEKO_LOGO_DATA_URI} width={34} height={34} alt="" aria-hidden="true" style={{ objectFit: 'cover' }} />
 }
 
 /**
