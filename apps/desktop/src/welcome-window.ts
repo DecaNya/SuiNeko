@@ -100,7 +100,7 @@ export async function openWelcomeWindow(locale: DesktopLocale, operations: Welco
   })
   ipcMain.handle(WELCOME_IPC.loginSuiApi, async (event) => {
     assertSender(event)
-    return operations.loginSuiApi()
+    return operations.loginSuiApi?.() ?? { ok: false }
   })
   ipcMain.handle(WELCOME_IPC.skip, async (event) => {
     assertSender(event)
