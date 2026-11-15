@@ -17,7 +17,7 @@ export interface SuiLoginResult {
 }
 
 export interface SuiLoginOptions {
-  /** Hosted BFF origin; defaults to SUI_HARNESS_BFF_URL or the production host. */
+  /** Hosted BFF origin; defaults to SUI_HARNESS_BFF_URL or the shared Sui Api host. */
   readonly bffUrl?: string
   /** Opens the system browser at the BFF login page. */
   readonly openExternal: (url: string) => Promise<void>
@@ -25,7 +25,7 @@ export interface SuiLoginOptions {
   readonly timeoutMs?: number
 }
 
-const DEFAULT_BFF = 'https://api.suiapi.odn.cc'
+const DEFAULT_BFF = 'https://suiapi.odn.cc'
 const CALLBACK_PATH = '/auth/callback'
 
 function deviceName(): string {
