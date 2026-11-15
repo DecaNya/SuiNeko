@@ -17,7 +17,7 @@ export interface SuiLoginResult {
 }
 
 export interface SuiLoginOptions {
-  /** Hosted BFF origin; defaults to SUI_HARNESS_BFF_URL or the shared Sui Api host. */
+  /** Hosted BFF origin; defaults to SUINEKO_BFF_URL or the shared Sui Api host. */
   readonly bffUrl?: string
   /** Opens the system browser at the BFF login page. */
   readonly openExternal: (url: string) => Promise<void>
@@ -42,7 +42,7 @@ function record(value: unknown): value is Record<string, unknown> {
  * @returns the device key and safe user metadata; never the New API access token.
  */
 export async function loginWithSuiBff(options: SuiLoginOptions): Promise<SuiLoginResult> {
-  const bff = (options.bffUrl ?? process.env.SUI_HARNESS_BFF_URL ?? DEFAULT_BFF).replace(/\/+$/u, '')
+  const bff = (options.bffUrl ?? process.env.SUINEKO_BFF_URL ?? DEFAULT_BFF).replace(/\/+$/u, '')
   const state = randomBytes(24).toString('base64url')
   let settle: ((value: { code: string }) => void) | undefined
   let fail: ((reason: Error) => void) | undefined
@@ -60,25 +60,25 @@ export async function loginWithSuiBff(options: SuiLoginOptions): Promise<SuiLogi
     const error = url.searchParams.get('error')
     if (error !== null) {
       res.writeHead(400, { 'content-type': 'text/plain; charset=utf-8' })
-      res.end('登录未完成，请回到 Sui Harness 重试。')
+      res.end('登录未完成，请回到 SuiNeko 重试。')
       fail?.(new Error('Sui login was not completed'))
       return
     }
     if (url.searchParams.get('state') !== state) {
       res.writeHead(400, { 'content-type': 'text/plain; charset=utf-8' })
-      res.end('登录状态无效，请回到 Sui Harness 重试。')
+      res.end('登录状态无效，请回到 SuiNeko 重试。')
       fail?.(new Error('Sui login state mismatch'))
       return
     }
     const code = url.searchParams.get('code')
     if (code === null || code.length < 16) {
       res.writeHead(400, { 'content-type': 'text/plain; charset=utf-8' })
-      res.end('登录凭据无效，请回到 Sui Harness 重试。')
+      res.end('登录凭据无效，请回到 SuiNeko 重试。')
       fail?.(new Error('Sui login code is missing'))
       return
     }
     res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' })
-    res.end('<!doctype html><meta charset="utf-8"><title>Sui Harness</title><body style="font:16px system-ui;background:#0c0d0f;color:#eee;display:grid;place-items:center;height:100vh;margin:0"><div>登录成功，正在返回 Sui Harness…</div></body>')
+    res.end('<!doctype html><meta charset="utf-8"><title>SuiNeko</title><body style="font:16px system-ui;background:#0c0d0f;color:#eee;display:grid;place-items:center;height:100vh;margin:0"><div>登录成功，正在返回 SuiNeko…</div></body>')
     settle?.({ code })
   })
   const timeout = setTimeout(() => fail?.(new Error('Sui login timed out')), options.timeoutMs ?? 10 * 60 * 1000)
