@@ -29,6 +29,7 @@ export function Welcome({ api }: { api: WelcomeApi }) {
   const [draft, setDraft] = useState('')
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
+  const [loginBusy, setLoginBusy] = useState(false)
   const busyRef = useRef(false)
   const mounted = useRef(true)
   const revision = useRef(0)
@@ -109,6 +110,23 @@ export function Welcome({ api }: { api: WelcomeApi }) {
     } finally {
       busyRef.current = false
       if (mounted.current) setBusy(false)
+    }
+  }
+  async function login() {
+    if (busyRef.current) return
+    void api.analytics?.('auth_page_click', { button_name: 'sign_in' })
+    busyRef.current = true
+    setBusy(true)
+    setLoginBusy(true)
+    setError('')
+    try {
+      const result = await api.loginSuiApi()
+      if (mounted.current && !result.ok) setError(m.welcomeAuthFailed)
+    } catch {
+      if (mounted.current) setError(m.welcomeAuthFailed)
+    } finally {
+      busyRef.current = false
+      if (mounted.current) { setBusy(false); setLoginBusy(false) }
     }
   }
   async function skip() {
@@ -208,8 +226,10 @@ export function Welcome({ api }: { api: WelcomeApi }) {
           disabled={cancelling || phase === 'committing' || phase === 'succeeded' || (phase === 'initializing' && !attempt?.id)}
           onClick={() => { void cancel() }}>{m.welcomeAuthCancel}</button>
       </div>
+      <p id="entry-error" className="key-error" role="alert" hidden={error === ''}>{error}</p>
       <div id="entry-actions" className="actions" hidden={page !== 'entry'}>
-        <button ref={keyButton} id="api-key" className="primary" type="button" onClick={() => { void api.analytics?.('auth_page_click', { button_name: 'api-key' }); navigate('key') }}>{m.welcomeApiKey}</button>
+        <button id="sui-login" className="primary" type="button" disabled={busy} onClick={() => { void login() }}>{loginBusy ? m.welcomeAuthStarting : m.welcomeSuiLogin}</button>
+        <button ref={keyButton} id="api-key" className="secondary" type="button" disabled={busy} onClick={() => { void api.analytics?.('auth_page_click', { button_name: 'api-key' }); navigate('key') }}>{m.welcomeApiKey}</button>
       </div>
       <div id="key-actions" className="actions" hidden={page !== 'key'}>
         <button id="save-key" className="primary" type="submit" form="key-form" disabled={busy || draft.trim() === ''}>{m.welcomeKeySave}</button>
