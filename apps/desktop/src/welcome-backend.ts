@@ -72,10 +72,15 @@ export function connectDesktopWelcome(
   const settingsAndReference = async () => {
     const settings = await invoke({ namespace: 'settings', method: 'describe', args: {} })
     if (!record(settings) || !Array.isArray(settings.namespaces)) throw new Error('desktop welcome: missing settings namespaces')
+    const pi = settings.namespaces.find((item: unknown) => record(item) && item.ns === 'llm-pi-ai')
+    const profile = record(pi) && record(pi.value) && record(pi.value.providers) ? pi.value.providers.suiapi : undefined
+    if (record(profile) && typeof profile.apiKeyEnv === 'string') {
+      return { settings: { namespaces: settings.namespaces }, ref: profile.apiKeyEnv }
+    }
     const official: unknown = settings.namespaces.find((item: unknown) => record(item) && item.ns === 'llm-deepseek')
     if (official === undefined) return { settings: { namespaces: settings.namespaces }, ref: undefined }
     if (!record(official) || !record(official.value) || typeof official.value.apiKeyEnv !== 'string') {
-      throw new Error('desktop welcome: missing official DeepSeek credential reference')
+      throw new Error('desktop welcome: missing Sui Api credential reference')
     }
     return { settings: { namespaces: settings.namespaces }, ref: official.value.apiKeyEnv }
   }
