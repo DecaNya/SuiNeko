@@ -20,6 +20,17 @@ jobs:
           node-version: '24'
       - run: corepack enable
       - run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Write Windows package settings
+        shell: pwsh
+        run: |
+          @"
+          DSH_DESKTOP_APP_ID=cc.odn.suiapi.desktop
+          DSH_DESKTOP_AUTO_UPDATE_ENV=production
+          DSH_DESKTOP_MANDATORY_UPDATE_PROD_ORIGIN=https://suiapi.odn.cc
+          DSH_DESKTOP_MANDATORY_UPDATE_CONFIG={}
+          DSH_DESKTOP_NPM_REGISTRY=https://registry.npmmirror.com
+          DSH_DESKTOP_WINDOWS_COMPRESSION_LEVEL=6
+          "@ | Set-Content apps/desktop/.env.windows -Encoding utf8
       - run: pnpm run package:desktop:win:x64:unsigned
       - uses: actions/upload-artifact@v4
         with:
