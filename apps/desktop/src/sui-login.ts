@@ -96,14 +96,23 @@ export async function loginWithSuiBff(options: SuiLoginOptions): Promise<SuiLogi
     start.searchParams.set('device', deviceName())
     await options.openExternal(start.toString())
     const { code } = await received
-    const response = await fetch(new URL('/auth/exchange', bff), {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ code, deviceName: deviceName() }),
-      signal: AbortSignal.timeout(20_000),
-    })
-    const body: unknown = await response.json()
-    if (!response.ok || !record(body) || body.ok !== true || typeof body.apiKey !== 'string' || body.apiKey.length < 20) {
+    let body: unknown
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        const response = await fetch(new URL('/auth/exchange', bff), {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ code, deviceName: deviceName() }),
+          signal: AbortSignal.timeout(20_000),
+        })
+        body = await response.json()
+        if (response.ok) break
+      } catch (error) {
+        if (attempt === 2) throw error
+      }
+      await new Promise(resolve => setTimeout(resolve, 300))
+    }
+    if (!record(body) || body.ok !== true || typeof body.apiKey !== 'string' || body.apiKey.length < 20) {
       throw new Error('Sui login exchange failed')
     }
     const user = record(body.user) ? body.user : {}
