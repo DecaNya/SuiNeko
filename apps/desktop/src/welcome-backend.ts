@@ -30,6 +30,8 @@ export interface DesktopWelcomeBackend {
    * @returns A safe write outcome without provider diagnostics.
    */
   save(apiKey: string): Promise<{ ok: boolean }>
+  /** Store a BFF-issued Sui Api device key at the fixed provider reference. */
+  saveSuiApiKey(apiKey: string): Promise<{ ok: boolean }>
 }
 
 function record(value: unknown): value is Record<string, unknown> {
@@ -160,6 +162,15 @@ export function connectDesktopWelcome(
         return { ok: true }
       } catch {
         // Provider diagnostics may contain credentials; the native form owns failure copy.
+        return { ok: false }
+      }
+    },
+    async saveSuiApiKey(apiKey) {
+      if (!/^[\x21-\x7e]+$/.test(apiKey)) return { ok: false }
+      try {
+        await invoke({ namespace: 'credentials', method: 'set', args: { ref: 'SUIAPI_API_KEY', value: apiKey } })
+        return { ok: true }
+      } catch {
         return { ok: false }
       }
     },
