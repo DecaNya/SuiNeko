@@ -294,6 +294,12 @@ body {
   opacity: 1;
 }
 
+#entry-error {
+  position: static;
+  margin: 12px auto 0;
+  text-align: center;
+}
+
 .key-error {
   position: absolute;
   top: 100%;
