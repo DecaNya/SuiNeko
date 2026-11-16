@@ -1435,7 +1435,7 @@ async function main(): Promise<void> {
           if (backend.host === undefined || welcomeBackend === undefined) return { ok: false }
           try {
             const result = await loginWithSuiBff({ openExternal: async (url) => { await shell.openExternal(url) } })
-            const saved = await welcomeBackend.save(result.apiKey)
+            const saved = await welcomeBackend.saveSuiApiKey(result.apiKey)
             if (!saved.ok) return { ok: false }
             await enterWorkspace()
             mainWindow?.show()
