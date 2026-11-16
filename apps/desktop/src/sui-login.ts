@@ -78,7 +78,7 @@ export async function loginWithSuiBff(options: SuiLoginOptions): Promise<SuiLogi
       return
     }
     res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' })
-    res.end('<!doctype html><meta charset="utf-8"><title>SuiNeko</title><body style="font:16px system-ui;background:#0c0d0f;color:#eee;display:grid;place-items:center;height:100vh;margin:0"><div>登录成功，正在返回 SuiNeko…</div></body>')
+    res.end('<!doctype html><meta charset="utf-8"><title>SuiNeko 登录成功</title><body style="font:16px system-ui;background:#0c0d0f;color:#eee;display:grid;place-items:center;height:100vh;margin:0"><div style="text-align:center"><p>登录成功。</p><p style="color:#9ba1aa;font-size:13px">请关闭此页面返回 SuiNeko。</p></div><script>setTimeout(function(){try{window.open("","_self");window.close()}catch(e){}},300)</script></body>')
     settle?.({ code })
   })
   const timeout = setTimeout(() => fail?.(new Error('Sui login timed out')), options.timeoutMs ?? 10 * 60 * 1000)
