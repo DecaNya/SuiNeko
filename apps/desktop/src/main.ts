@@ -1438,6 +1438,9 @@ async function main(): Promise<void> {
             const saved = await welcomeBackend.save(result.apiKey)
             if (!saved.ok) return { ok: false }
             await enterWorkspace()
+            mainWindow?.show()
+            mainWindow?.focus()
+            app.focus({ steal: true })
             return { ok: true }
           } catch {
             return { ok: false }
