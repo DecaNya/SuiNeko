@@ -73,7 +73,10 @@ export function connectDesktopWelcome(
     const settings = await invoke({ namespace: 'settings', method: 'describe', args: {} })
     if (!record(settings) || !Array.isArray(settings.namespaces)) throw new Error('desktop welcome: missing settings namespaces')
     const pi = settings.namespaces.find((item: unknown) => record(item) && item.ns === 'llm-pi-ai')
-    const profile = record(pi) && record(pi.value) && record(pi.value.providers) ? pi.value.providers.suiapi : undefined
+    const profiles = record(pi) && record(pi.value)
+      ? (record(pi.value.providers) ? pi.value.providers : record(pi.value.profiles) ? pi.value.profiles : undefined)
+      : undefined
+    const profile = record(profiles) ? profiles.suiapi : undefined
     if (record(profile) && typeof profile.apiKeyEnv === 'string') {
       return { settings: { namespaces: settings.namespaces }, ref: profile.apiKeyEnv }
     }
