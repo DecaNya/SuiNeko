@@ -1,5 +1,8 @@
 /** Native Sui Api account login through the hosted BFF and a loopback callback. */
 import { createServer } from 'node:http'
+import { existsSync, readFileSync, writeFileSync } from 'node:fs'
+import { join } from 'node:path'
+import { resolveDshHome } from '@deepseek-ai/dsh-home-paths'
 import { randomBytes } from 'node:crypto'
 import { hostname } from 'node:os'
 
@@ -130,4 +133,24 @@ export async function loginWithSuiBff(options: SuiLoginOptions): Promise<SuiLogi
     clearTimeout(timeout)
     server.close()
   }
+}
+
+
+/** Write the fixed Sui Api credential directly into the credentials document.
+ * The credentials-local watcher hot-publishes external document edits, so this
+ * is a fallback when the Host RPC rejects the reference.
+ * @param apiKey - device key issued by the BFF.
+ */
+export function writeSuiCredential(apiKey: string): void {
+  const path = join(resolveDshHome(), '.credentials.yaml')
+  let source = existsSync(path) ? readFileSync(path, 'utf8') : 'version: 1\nrefs:\n'
+  const line = `  SUIAPI_API_KEY: ${apiKey}`
+  if (/^  SUIAPI_API_KEY:.*$/mu.test(source)) {
+    source = source.replace(/^  SUIAPI_API_KEY:.*$/mu, line)
+  } else if (/^refs:\s*$/mu.test(source)) {
+    source = source.replace(/^refs:\s*$/mu, `refs:\n${line}`)
+  } else {
+    source = `${source.replace(/\s*$/u, '')}\nrefs:\n${line}\n`
+  }
+  writeFileSync(path, `${source.replace(/\s*$/u, '')}\n`, { mode: 0o600 })
 }
