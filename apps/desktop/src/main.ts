@@ -57,7 +57,7 @@ import { DesktopUpdateSchedule, resolveDesktopUpdateScheduleConfig } from './upd
 import { desktopUpdateErrorSummary, presentDesktopUpdate } from './update-presentation.ts'
 import { desktopErrorState } from './startup-error.ts'
 import { readDesktopLoginShellEnvironment, resolveDesktopLoginShellConfig } from './login-shell-environment.ts'
-import { loginWithSuiBff } from './sui-login.ts'
+import { loginWithSuiBff, writeSuiCredential } from './sui-login.ts'
 import { DesktopMandatoryUpdatePolicy, resolveDesktopPolicyConfig, type DesktopPolicyState } from './mandatory-update-policy.ts'
 import { desktopClientMetadata, desktopClientVersion } from './client-metadata.ts'
 import { DesktopMandatoryUpdateWindow } from './mandatory-update-window.ts'
@@ -1436,7 +1436,7 @@ async function main(): Promise<void> {
           try {
             const result = await loginWithSuiBff({ openExternal: async (url) => { await shell.openExternal(url) } })
             const saved = await welcomeBackend.saveSuiApiKey(result.apiKey)
-            if (!saved.ok) return { ok: false }
+            if (!saved.ok) writeSuiCredential(result.apiKey)
             await enterWorkspace()
             mainWindow?.show()
             mainWindow?.focus()
